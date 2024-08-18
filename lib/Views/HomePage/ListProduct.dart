@@ -1,138 +1,170 @@
 import 'package:flutter/material.dart';
-import 'package:ecommerce_mobile_application/services/product_service.dart';
-import 'package:ecommerce_mobile_application/models/product_model.dart';
+import '../ShopingCartPage/ShoppingCart.dart'; // Import trang giỏ hàng
+import '../../option/homepage_option.dart';
+import '../CouponPage/coupon_page.dart';
+import 'ListProduct.dart'; // Import ListProduct
 
-import '../ProductDetailPage/product_detail_page.dart';
-
-class ListProduct extends StatelessWidget {
-  final ProductService _productService = ProductService();
+class HomePageContent extends StatefulWidget {
+  const HomePageContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    void _navigateToProductDetail(Product product) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductDetailPage(product: product),
-        ),
-      );
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Danh sách sản phẩm',
-          style: TextStyle(
-            fontSize: 14, // Thay đổi kích thước chữ tại đây
-          ),
-        ),
-      ),
-      body: FutureBuilder<List<Product>>(
-        future: _productService.getAllProducts(),
-        builder: (context, snapshot) {
-          // Xử lý trạng thái đang chờ
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          // Xử lý lỗi
-          if (snapshot.hasError) {
-            return Center(child: Text('Lỗi: ${snapshot.error}'));
-          }
-
-          // Xử lý khi không có dữ liệu
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Không có sản phẩm nào'));
-          }
-
-          // Xử lý khi có dữ liệu
-          final products = snapshot.data!;
-          return GridView.builder(
-            padding: const EdgeInsets.all(8.0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ProductCard(
-                product: product,
-                onTap: () => _navigateToProductDetail(products[index]),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
+  _HomePageContentState createState() => _HomePageContentState();
 }
 
-class ProductCard extends StatelessWidget {
-  final Product product;
-  final VoidCallback onTap;
-
-  const ProductCard({Key? key, required this.product, required this.onTap}) : super(key: key);
-
+class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        elevation: 3,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.blueAccent),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: '100% hàng tuyển chọn',
+              prefixIcon: const Icon(Icons.search, color: Colors.blueAccent),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.grey[200],
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart, color: Colors.blueAccent),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ShoppingCart()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: product.imageUrl.isNotEmpty
-                    ? Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                )
-                    : Placeholder(), // Thay thế bằng Placeholder nếu imageUrl trống
-              ),
-              SizedBox(height: 8),
-              Text(
-                product.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              buildSectionContainer(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildCategoryItem(
+                      icon: Icons.thumb_up_alt,
+                      title: 'TOP DEAL',
+                      onTap: () {},
+                    ),
+                    buildCategoryItem(
+                      icon: Icons.storefront,
+                      title: 'Trading',
+                      onTap: () {},
+                    ),
+                    buildCategoryItem(
+                      icon: Icons.percent,
+                      title: 'Coupon',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CouponPage()),
+                        );
+                      },
+                    ),
+                    buildCategoryItem(
+                      icon: Icons.local_offer,
+                      title: 'Giảm giá',
+                      onTap: () {},
+                    ),
+                    buildCategoryItem(
+                      icon: Icons.airplanemode_active,
+                      title: 'Hàng ngoại',
+                      onTap: () {},
+                    ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 4),
-              Text(
-                '${product.price.toStringAsFixed(0)} ₫', // Chuyển giá thành chuỗi với định dạng không có số thập phân
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
+              const SizedBox(height: 8),
+              buildSectionContainer(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildProductItem(
+                      image: 'assets/images/img_1.png',
+                      title: 'Cùng mẹ chăm bé',
+                      onTap: () {},
+                    ),
+                    buildProductItem(
+                      image: 'assets/images/img_2.png',
+                      title: 'Sách',
+                      onTap: () {},
+                    ),
+                    buildProductItem(
+                      image: 'assets/images/img_3.png',
+                      title: 'Công nghệ',
+                      onTap: () {},
+                    ),
+                    buildProductItem(
+                      image: 'assets/images/img_4.png',
+                      title: 'Yêu bếp',
+                      onTap: () {},
+                    ),
+                    buildProductItem(
+                      image: 'assets/images/img_7.png',
+                      title: 'Sắc đẹp',
+                      onTap: () {},
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 4),
-              Row(
-                children: [
-                  Icon(Icons.star, size: 16, color: Colors.yellow),
-                  Text(
-                    "4.5", // Thay đổi thành đánh giá động nếu có
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    'Đã bán 219', // Thay đổi thành số lượng bán động nếu có
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                ],
+              const SizedBox(height: 8),
+              buildSectionContainer(
+                child: const Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.blueAccent),
+                    SizedBox(width: 8),
+                    Text(
+                      'Giao đến: TP. Thủ Đức, P. Hiệp Bình P...',
+                      style: TextStyle(color: Colors.black87, fontSize: 9),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 8),
-              Text(
-                "Giao sáng mai", // Thay đổi thành thông tin giao hàng động nếu có
-                style: TextStyle(fontSize: 12, color: Colors.green),
+              const SizedBox(height: 8),
+              buildSectionContainer(
+                child: Container(
+                  height: 30,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildDealItem(
+                        title: 'TOP DEAL • SIÊU RẺ',
+                      ),
+                      TextButton(
+                        onPressed: () {  },
+                        child: const Text(
+                          'Xem tất cả',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 10
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              buildSectionContainer(
+                child: SizedBox(
+                  height: 351, // Điều chỉnh kích thước phù hợp
+                  child: ListProduct(), // Hiển thị ListProduct ngay dưới TOP DEAL
+                ),
               ),
             ],
           ),
@@ -140,6 +172,7 @@ class ProductCard extends StatelessWidget {
       ),
     );
   }
+}
 }
 
 
