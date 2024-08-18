@@ -4,7 +4,7 @@ import '../models/coupon_model.dart';
 import '../utils/utils.dart';
 
 class CouponService {
-  final String apiUrl = '${APIUtils.baseUrl}/coupons.php'; // Đổi đường dẫn cho đúng
+  final String apiUrl = '${APIUtils.baseUrl}/coupons.php';
 
   Future<List<Coupon>> fetchCoupons() async {
     final response = await http.get(Uri.parse(apiUrl));
