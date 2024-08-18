@@ -21,7 +21,7 @@ class UserProfile {
     return UserProfile(
       userName: json['username'] ?? '', // Cung cấp giá trị mặc định nếu null
       fullName: json['full_name'] as String?,
-      dateOfBirth: json['birth_date'] as String?, // Đảm bảo tên thuộc tính đúng
+      dateOfBirth: json['birth_date'] as String?, 
       gender: json['gender'] as String?,
       nationality: json['nationality'] as String?,
       phoneNumber: json['phone_number'] as String?,
