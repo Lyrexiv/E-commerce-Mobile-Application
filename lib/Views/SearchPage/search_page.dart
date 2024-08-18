@@ -42,10 +42,10 @@ class _SearchPageState extends State<SearchPage> {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Hai mục trên mỗi hàng
+                  crossAxisCount: 2, 
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0,
-                  childAspectRatio: 0.6, // Điều chỉnh dựa trên thiết kế
+                  childAspectRatio: 0.6, 
                 ),
                 itemCount: products.length,
                 itemBuilder: (context, index) {
@@ -120,19 +120,19 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Icon(Icons.star, size: 16, color: Colors.yellow),
                   Text(
-                    "4.5", // Thay bằng đánh giá động nếu cần
+                    "4.5", 
                     style: TextStyle(fontSize: 14),
                   ),
                   SizedBox(width: 4),
                   Text(
-                    'Đã bán 219', // Thay bằng số lượng bán động nếu cần
+                    'Đã bán 219', 
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),
               SizedBox(height: 8),
               Text(
-                "Giao sáng mai", // Thời gian giao hàng hoặc thông tin khác
+                "Giao sáng mai", 
                 style: TextStyle(fontSize: 12, color: Colors.green),
               ),
             ],
