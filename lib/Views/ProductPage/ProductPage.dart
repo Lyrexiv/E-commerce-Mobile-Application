@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ecommerce_mobile_application/services/product_service.dart';
 import 'package:ecommerce_mobile_application/models/product_model.dart';
-import 'package:ecommerce_mobile_application/Views/ProductDetailPage/product_detail_page.dart'; // Đảm bảo lớp ProductDetailPage được import
+import 'package:ecommerce_mobile_application/Views/ProductDetailPage/product_detail_page.dart'; 
 
 class ProductPage extends StatefulWidget {
   final int categoryId;
